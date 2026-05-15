@@ -11,6 +11,7 @@
  */
 
 #include <algorithm>
+#include <cctype>
 #include <fstream>
 #include <iostream>
 #include <iterator>
@@ -60,6 +61,18 @@ std::vector<std::string> get_applicants(const std::string &filename) {
 std::string initials(std::string_view name) {
   // STUDENT TODO: Implement this function.
   // throw std::runtime_error("Not implemented: initials");
+  std::string out;
+  bool space;
+
+  for (char c : name) {
+    if (std::isspace(c)) {
+      space = true;
+    } else if (space) {
+      out += std::toupper(c);
+      space = false;
+    }
+  }
+  return out;
 }
 
 /**
@@ -74,7 +87,7 @@ std::string initials(std::string_view name) {
 std::vector<std::string>
 find_matches(std::string_view name, const std::vector<std::string> &students) {
   // STUDENT TODO: Implement this function.
-  throw std::runtime_error("Not implemented: find_matches");
+  // throw std::runtime_error("Not implemented: find_matches");
 }
 
 /**
