@@ -62,7 +62,7 @@ std::string initials(std::string_view name) {
   // STUDENT TODO: Implement this function.
   // throw std::runtime_error("Not implemented: initials");
   std::string out;
-  bool space;
+  bool space{true};
 
   for (char c : name) {
     if (std::isspace(c)) {
@@ -88,6 +88,13 @@ std::vector<std::string>
 find_matches(std::string_view name, const std::vector<std::string> &students) {
   // STUDENT TODO: Implement this function.
   // throw std::runtime_error("Not implemented: find_matches");
+  std::string target = initials(name);
+  std::vector<std::string> matches;
+
+  std::ranges::copy_if(
+      students, std::back_inserter(matches),
+      [&](const std::string &student) { return student == target; }, initials);
+  return matches;
 }
 
 /**
