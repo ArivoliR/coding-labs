@@ -34,6 +34,7 @@
 std::vector<std::string> get_applicants(const std::string &filename) {
   // STUDENT TODO: Implement this function.
   // throw std::runtime_error("Not implemented: get_applicants");
+
   std::ifstream file(filename);
   if (!file) {
     std::cerr << "Unable to access " << filename << "\n";
@@ -61,6 +62,7 @@ std::vector<std::string> get_applicants(const std::string &filename) {
 std::string initials(std::string_view name) {
   // STUDENT TODO: Implement this function.
   // throw std::runtime_error("Not implemented: initials");
+
   std::string out;
   bool space{true};
 
@@ -88,6 +90,7 @@ std::vector<std::string>
 find_matches(std::string_view name, const std::vector<std::string> &students) {
   // STUDENT TODO: Implement this function.
   // throw std::runtime_error("Not implemented: find_matches");
+
   std::string target = initials(name);
   std::vector<std::string> matches;
 
@@ -106,7 +109,17 @@ find_matches(std::string_view name, const std::vector<std::string> &students) {
  */
 std::string get_match(const std::vector<std::string> &matches) {
   // STUDENT TODO: Implement this function.
-  throw std::runtime_error("Not implemented: get_match");
+  // throw std::runtime_error("Not implemented: get_match");
+  if (matches.empty()) {
+    return "NO MATCHES FOUND.";
+  }
+
+  std::mt19937 seed(std::random_device{}());
+  std::vector<std::string> chosen(1);
+
+  std::sample(matches.begin(), matches.end(), chosen.begin(), 1, seed);
+
+  return chosen[0];
 }
 
 /**
@@ -128,7 +141,7 @@ std::string get_match(const std::vector<std::string> &matches) {
 std::vector<std::pair<std::string, std::string>>
 run_mixer(std::vector<std::string> &applicants) {
   // STUDENT TODO: Implement this function.
-  throw std::runtime_error("Not implemented: run_mixer");
+  // throw std::runtime_error("Not implemented: run_mixer");
 }
 
 /* #### Please don't remove this line! #### */
