@@ -142,6 +142,31 @@ std::vector<std::pair<std::string, std::string>>
 run_mixer(std::vector<std::string> &applicants) {
   // STUDENT TODO: Implement this function.
   // throw std::runtime_error("Not implemented: run_mixer");
+  //
+  std::vector<std::pair<std::string, std::string>> pairs;
+  bool pair_found{true};
+
+  while (pair_found) {
+    pair_found = false;
+    for (std::size_t i = 0; i < applicants.size(); i++) {
+      for (std::size_t j = i + 1; j < applicants.size(); j++) {
+        if (initials(applicants[i]) == initials(applicants[j])) {
+          pairs.push_back({applicants[i], applicants[j]});
+          pair_found = true;
+
+          applicants.erase(applicants.begin() + j);
+          applicants.erase(applicants.begin() + i);
+
+          break;
+        }
+      }
+
+      if (pair_found) {
+        break;
+      }
+    }
+  }
+  return pairs;
 }
 
 /* #### Please don't remove this line! #### */

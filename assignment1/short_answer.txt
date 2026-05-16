@@ -2,21 +2,23 @@ Assignment 1: Marriage Pact — short answers
 =============================================
 
 Q1. reserve vs resize — and the capacity you chose in get_applicants.
-    YOUR ANSWER:
+    YOUR ANSWER: reserve(n) allocates a block of memory needed for n elements. When we add the elements from students.txt to the vector with push_back, it is now much faster since the vector does not have to reallocate and copy itself when it grows. vec.resize(n) creates or destroys objects. I used reserve(1000) because students.txt has 1000 names (lines).
 
 
 Q2. What does it mean for a std::ranges algorithm to take a projection?
     Give one example from your find_matches (or explain why a projection
     didn't help).
-    YOUR ANSWER:
+    YOUR ANSWER: A projection is a helper function the algorithm runs on each item before checking it. Here, the function `initials()` is the projection, which changes each full name into initials, so copy_if compares initials instead of full names.
 
 
 Q3. Iterator invalidation in run_mixer. Which strategy did you choose
     (erase-returns-next-iterator / indices / restart) and why?
     What specifically goes wrong with the naive approach?
-    YOUR ANSWER:
+    YOUR ANSWER: I used the restart strategy. Once a pair is found, I erase the higher index first and then the lower index, and restart the scan from the very beginning. I found this intuitive, since after the restart, the indexes are now bound by the new size of the vector. 
+    The naive approach can lead to errors by accessing invalid positions because erasing from a vector shifts the elements after it to the left. This also leads to some elements getting skipped. 
 
 
 Q4. at() vs []. When, if ever, would you reach for vec.at(i) over
     vec[i] in this assignment?
-    YOUR ANSWER:
+    YOUR ANSWER: Both access the element at the index `i`. The difference is, at() checks whether the index is in range, and throws a std::out_of_range exception if it isn't, which makes it safer. 
+    But vec[i] is faster, and it is fine to use it when we know `i` is valid for sure. In the assignment I used vec[i] since the index is always valid because of the loop conditions. 
