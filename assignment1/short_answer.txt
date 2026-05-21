@@ -1,5 +1,4 @@
 Assignment 1: Marriage Pact — short answers
-=============================================
 
 Q1. reserve vs resize — and the capacity you chose in get_applicants.
     YOUR ANSWER: reserve(n) allocates a block of memory needed for n elements. When we add the elements from students.txt to the vector with push_back, it is now much faster since the vector does not have to reallocate and copy itself when it grows. vec.resize(n) creates or destroys objects. I used reserve(1000) because students.txt has 1000 names (lines).
