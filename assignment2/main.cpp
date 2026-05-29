@@ -4,10 +4,13 @@
  * (originally by Jacob Roberts-Baca).
  */
 
+#include <algorithm>
 #include <functional>
 #include <iostream>
+#include <ranges>
 #include <sstream>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 #include "unique_ptr.h"
@@ -17,7 +20,8 @@
  * by using a `unique_ptr` to manage the pointer to the next node.
  * @tparam T The type of the value stored in the node.
  *
- * @note No modifications are necessary to this struct in order to complete the assignment!
+ * @note No modifications are necessary to this struct in order to complete the
+ * assignment!
  */
 template <typename T> struct ListNode {
 
@@ -28,7 +32,8 @@ template <typename T> struct ListNode {
   cs106l::unique_ptr<ListNode<T>> next;
 
   /**
-   * @brief Constructs a single element linked list, setting `next` to `nullptr`.
+   * @brief Constructs a single element linked list, setting `next` to
+   * `nullptr`.
    * @param value The value to store in the node.
    */
   ListNode(T value) : value(value), next(nullptr) {
@@ -51,9 +56,18 @@ template <typename T> struct ListNode {
  * @param values The values to store in the list.
  * @return A `unique_ptr` to the head of the list.
  */
-template <typename T> cs106l::unique_ptr<ListNode<T>> create_list(const std::vector<T>& values) {
+template <typename T>
+cs106l::unique_ptr<ListNode<T>> create_list(const std::vector<T> &values) {
   /* STUDENT TODO: Implement this method */
-  throw std::runtime_error("Not implemented: createList");
+  cs106l::unique_ptr<ListNode<T>> head = nullptr;
+
+  std::ranges::for_each(values | std::views::reverse, [&head](const T &value) {
+    auto node = cs106l::make_unique<ListNode<T>>(value);
+    node->next = std::move(head);
+    head = std::move(node);
+  });
+
+  return head;
 }
 
 /**
@@ -64,7 +78,7 @@ template <typename T> cs106l::unique_ptr<ListNode<T>> create_list(const std::vec
  * @paragraph func The function to apply to each element.
  */
 template <typename T, typename Func>
-void map_list(const cs106l::unique_ptr<ListNode<T>>& head, const Func& func) {
+void map_list(const cs106l::unique_ptr<ListNode<T>> &head, const Func &func) {
   if (!head)
     return;
   func(head->value);
@@ -77,7 +91,7 @@ void map_list(const cs106l::unique_ptr<ListNode<T>>& head, const Func& func) {
 void linked_list_example() {
   std::vector<std::string> names{"Jacob", "Fabio", "Keith", "Chris", "Sean"};
   auto head = create_list(names);
-  map_list(head, [](const std::string& name) { std::cout << name << "\n"; });
+  map_list(head, [](const std::string &name) { std::cout << name << "\n"; });
 }
 
 #include "tests/utils.hpp"

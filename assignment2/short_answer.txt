@@ -1,26 +1,33 @@
-Before submitting this file, make sure that there are no more TODO
-placeholders remaining in the file (and remove this comment too).
-
 Unique Pointer
 --------------
 
 Q1. List one or two benefits of using RAII to manage memory instead manually calling `new` and `delete`.
-A1. TODO
+A1. RAII being used instead of manually calling `new` and `delete` prevents a lot of bugs like memory leaks (delete's get skipped when an exception is thrown), double delete. + the code is much more readable since there are no complex resource management code present when using RAII. 
 
 Q2. When implementing move semantics for a `unique_ptr`, for example in the move constructor `unique_ptr(unique_ptr&& other)`, it is essential that we set the underlying pointer of the `other` parameter to `nullptr` before exiting the function. Explain in your own words what problem would arise if we did not.
-A2. TODO
+A2. if we dont do that, then we could have a overlap in two different unique_ptr's pointing to the same memory address. This means that, 2 different pointers, think they exclusively own the same memory. This could cause a double-free. 
 
 Q3. This method of recursive deallocation through RAII works great for small lists, but may pose a problem for longer lists. Why? Hint: what is the limit for how "deep" a recursive function's call stack can grow?
-A3. TODO
+A3. It could potentially cause a stack overflow since the size of stack is limited. RAII's recrusive destructor chain can exceed the stack size. This is why RAII is not great for big data structures. 
 
 Q4. What does `std::move` do in this context? Why is it safe to use `std::move` and move semantics here?
-A4. TODO
+A4. std::move(x) does not move anything. It casts   `x` to a rvalue, which tells the compiler that the object's resources can be copied instead of moved. Here std::move(head) allows ownership of the linked-list node to be transferred into node->next using the move assignment operator instead of the deleted copy assignment operator
 
 Q5. Why does `operator->` return `T*` (a pointer) rather than `T&` (a reference)? Walk through what the compiler does when it sees `ptr->member`.
-A5. TODO
+A5. ptr->member is rewritten by the compiler to (ptr.operator())->member which is why operator-> should return a pointer like T*. If it returned T&, the compiler will get T& ->member which is invalid because -> needs a pointer which can then access the member.
 
 Q6. Why does this class need BOTH `T& operator*()` and `const T& operator*() const`? Give a one-line code example that would fail to compile if one of them were missing, and explain which one.
-A6. TODO
-
+A6. It is so that, const smart pointers can have read-only access to the object while non-const pointers can modify it as well.
+const class<x> p
+*p needs const T& operator*() const, without it deferencing would fai since T& operator*() cannot be called on a const object. 
+ 
 Q7. We marked `operator bool()` as `explicit`. What kind of unintended code would compile if we had left the `explicit` off? Give a concrete example.
-A7. TODO
+A7. If we did not mark the bool operator as explicit, the object could be implicitly converted to bool in places that are not just condition checks. Example:
+if (x){
+    ...  // say x was intially an int = 100;
+  }
+here it is fine since we are just doing a condition check. 
+
+Instead something like, 
+int y = x; 
+without explicit bool operator, x would implicitly convert to bool and then to int, making x=100, x=true, x=1, y=1. Marking operator bool() as explicit prevents these unintended bugs. 

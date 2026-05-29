@@ -6,31 +6,36 @@
 namespace cs106l {
 
 /**
- * @brief A smart pointer that owns an object and deletes it when it goes out of scope.
+ * @brief A smart pointer that owns an object and deletes it when it goes out of
+ * scope.
  * @tparam T The type of the object to manage.
  * @note This class is a simpler version of `std::unique_ptr`.
  */
 template <typename T> class unique_ptr {
 private:
   /* STUDENT TODO: What data must a unique_ptr keep track of? */
+  T *ptr;
 
 public:
   /**
    * @brief Constructs a new `unique_ptr` from the given pointer.
    * @param ptr The pointer to manage.
-   * @note You should avoid using this constructor directly and instead use `make_unique()`.
+   * @note You should avoid using this constructor directly and instead use
+   * `make_unique()`.
    */
-  unique_ptr(T* ptr) {
+  unique_ptr(T *ptr) : ptr(ptr) {
     /* STUDENT TODO: Implement the constructor */
-    throw std::runtime_error("Not implemented: unique_ptr(T* ptr)");
+    // this->ptr = ptr;
+    // throw std::runtime_error("Not implemented: unique_ptr(T* ptr)");
   }
 
   /**
    * @brief Constructs a new `unique_ptr` from `nullptr`.
    */
-  unique_ptr(std::nullptr_t) {
+  unique_ptr(std::nullptr_t) : ptr(nullptr) {
     /* STUDENT TODO: Implement the nullptr constructor */
-    throw std::runtime_error("Not implemented: unique_ptr(std::nullptr_t)");
+    // this->ptr = nullptr;
+    // throw std::runtime_error("Not implemented: unique_ptr(std::nullptr_t)");
   }
 
   /**
@@ -43,38 +48,45 @@ public:
    * @brief Dereferences a `unique_ptr` and returns a reference to the object.
    * @return A reference to the object.
    */
-  T& operator*() {
+  T &operator*() {
     /* STUDENT TODO: Implement the dereference operator */
-    throw std::runtime_error("Not implemented: operator*()");
+    return *ptr;
+    // throw std::runtime_error("Not implemented: operator*()");
   }
 
   /**
-   * @brief Dereferences a `unique_ptr` and returns a const reference to the object.
+   * @brief Dereferences a `unique_ptr` and returns a const reference to the
+   * object.
    * @return A const reference to the object.
    */
-  const T& operator*() const {
+  const T &operator*() const {
     /* STUDENT TODO: Implement the dereference operator (const) */
-    throw std::runtime_error("Not implemented: operator*() const");
+    // throw std::runtime_error("Not implemented: operator*() const");
+    return *ptr;
   }
 
   /**
    * @brief Returns a pointer to the object managed by the `unique_ptr`.
-   * @note This allows for accessing the members of the managed object through the `->` operator.
+   * @note This allows for accessing the members of the managed object through
+   * the `->` operator.
    * @return A pointer to the object.
    */
-  T* operator->() {
+  T *operator->() {
     /* STUDENT TODO: Implement the arrow operator */
-    throw std::runtime_error("Not implemented: operator->()");
+    // throw std::runtime_error("Not implemented: operator->()");
+    return ptr;
   }
 
   /**
    * @brief Returns a const pointer to the object managed by the `unique_ptr`.
-   * @note This allows for accessing the members of the managed object through the `->` operator.
+   * @note This allows for accessing the members of the managed object through
+   * the `->` operator.
    * @return A const pointer to the object.
    */
-  const T* operator->() const {
+  const T *operator->() const {
     /* STUDENT TODO: Implement the arrow operator */
-    throw std::runtime_error("Not implemented: operator->() const");
+    // throw std::runtime_error("Not implemented: operator->() const");
+    return ptr;
   }
 
   /**
@@ -86,7 +98,8 @@ public:
    */
   explicit operator bool() const {
     /* STUDENT TODO: Implement the boolean conversion operator */
-    throw std::runtime_error("Not implemented: operator bool() const");
+    // throw std::runtime_error("Not implemented: operator bool() const");
+    return ptr != nullptr;
   }
 
   /** STUDENT TODO: In the space below, do the following:
@@ -96,6 +109,24 @@ public:
    * - Implement the move constructor
    * - Implement the move assignment operator
    */
+  ~unique_ptr() { delete ptr; }
+
+  unique_ptr(const unique_ptr &ptr) = delete;
+  unique_ptr &operator=(const unique_ptr &ptr) = delete;
+
+  unique_ptr(unique_ptr &&other) noexcept {
+    ptr = other.ptr;
+    other.ptr = nullptr;
+  }
+
+  unique_ptr &operator=(unique_ptr &&other) noexcept {
+    if (this == &other)
+      return *this;
+    delete ptr;
+    ptr = other.ptr;
+    other.ptr = nullptr;
+    return *this;
+  }
 
   /* STUDENT TODO (Part 3): Implement equality comparisons.
    *
@@ -115,6 +146,15 @@ public:
    * Hint: declare them as `friend` inside this class so they can
    * see the private pointer, and define them inline here.
    */
+  friend bool operator==(const unique_ptr &a, const unique_ptr &b) {
+    return a.ptr == b.ptr;
+  }
+  friend bool operator==(const unique_ptr &a, std::nullptr_t) {
+    return a.ptr == nullptr;
+  }
+  friend bool operator==(std::nullptr_t, const unique_ptr &a) {
+    return a.ptr == nullptr;
+  }
 };
 
 /**
@@ -124,9 +164,9 @@ public:
  * @tparam Args The types of the arguments to pass to the constructor of T.
  * @param args The arguments to pass to the constructor of T.
  */
-template <typename T, typename... Args> 
-unique_ptr<T> make_unique(Args&&... args) {
+template <typename T, typename... Args>
+unique_ptr<T> make_unique(Args &&...args) {
   return unique_ptr<T>(new T(std::forward<Args>(args)...));
 }
 
-}
+} // namespace cs106l
