@@ -4,7 +4,7 @@ CXXFLAGS_RELEASE := $(CXXFLAGS_BASE) -O2 -g
 CXXFLAGS_DEBUG := $(CXXFLAGS_BASE) -O0 -g
 CXXFLAGS_PERF := $(CXXFLAGS_BASE) -O2 -g -fno-omit-frame-pointer
 CXXFLAGS_GPROF := $(CXXFLAGS_BASE) -O0 -g -pg
-CXXFLAGS_OPTIMIZED := $(CXXFLAGS_BASE) -O3 -g
+CXXFLAGS_OPTIMIZED := $(CXXFLAGS_BASE) -Ofast -g
 
 TARGET := grid_bfs
 SOURCE := grid_bfs.cpp
@@ -47,7 +47,7 @@ help:
 	@echo "  debug      - build with -O0 -g"
 	@echo "  perf       - build with frame pointers for perf call stacks"
 	@echo "  gprof      - build with -O0 -g -pg for gprof"
-	@echo "  optimized  - build with -O3 -g"
+	@echo "  optimized  - build with -Ofast -g"
 	@echo "  test       - run deterministic sanity check"
 	@echo "  benchmark  - time the fixed workload three times"
 	@echo "  clean      - remove binary and profiler outputs"

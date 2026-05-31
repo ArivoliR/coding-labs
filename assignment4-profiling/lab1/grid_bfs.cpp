@@ -193,9 +193,8 @@ int shortest_path_bfs(const vector<string> &grid, const RouteRequest &request,
     int cols = static_cast<int>(grid[0].size());
     int total = rows * cols;
 
-    int *distance = new int[total];
-    std::fill(distance, distance + total, -1);
-    unsigned char *visited = new unsigned char[total]{};
+    vector<int> distance(static_cast<size_t>(total), -1);
+    vector<unsigned char> visited(static_cast<size_t>(total), 0);
     vector<Point> frontier(static_cast<size_t>(total));
     size_t frontier_head = 0;
     size_t frontier_tail = 0;
@@ -340,8 +339,8 @@ int next_pressure_value(int center, int north, int south, int west, int east,
  * Evolve the raw visit heatmap into a congestion-pressure map.
  *
  * Each pass depends on the previous pass, so the outer loop represents real
- * iterative work. The inner loops intentionally walk a row-major array in
- * column-major order to create a cache-locality problem for students to find.
+ * iterative work. The inner loops walk the row-major arrays in row-major order
+ * to keep nearby memory accesses close together.
  */
 CongestionSummary compute_congestion_pressure(const vector<int> &heatmap,
                                               int rows, int cols,
@@ -355,8 +354,8 @@ CongestionSummary compute_congestion_pressure(const vector<int> &heatmap,
     }
 
     for (int pass = 0; pass < congestion_passes; ++pass) {
-        for (int col = 1; col < cols - 1; ++col) {
-            for (int row = 1; row < rows - 1; ++row) {
+        for (int row = 1; row < rows - 1; ++row) {
+            for (int col = 1; col < cols - 1; ++col) {
                 int index = row * cols + col;
 
                 int center = current[index];
