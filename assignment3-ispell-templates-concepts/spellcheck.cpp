@@ -9,7 +9,8 @@
 #include <set>
 #include <vector>
 
-template <typename Iterator, typename UnaryPred>
+template <std::input_iterator Iterator,
+          std::indirect_unary_predicate<Iterator> UnaryPred>
 std::vector<Iterator> find_all(Iterator begin, Iterator end, UnaryPred pred);
 
 Corpus tokenize(std::string &source) {
@@ -30,8 +31,32 @@ Corpus tokenize(std::string &source) {
 
 std::set<Misspelling> spellcheck(const Corpus &source,
                                  const Dictionary &dictionary) {
-  /* TODO: Implement this method */
-  return std::set<Misspelling>();
+  namespace rv = std::ranges::views;
+
+  auto is_misspelled = [&](const Token &token) {
+    return !dictionary.contains(token.content);
+  };
+
+  auto make_misspelling = [&](const Token &token) {
+    auto is_one_edit_away = [&](const std::string &word) {
+      return levenshtein(token.content, word) == 1;
+    };
+
+    auto suggestion_view = dictionary | rv::filter(is_one_edit_away);
+    std::set<std::string> suggestions(suggestion_view.begin(),
+                                      suggestion_view.end());
+
+    return Misspelling{token, suggestions};
+  };
+
+  auto has_suggestions = [](const Misspelling &m) {
+    return !m.suggestions.empty();
+  };
+
+  auto view = source | rv::filter(is_misspelled) |
+              rv::transform(make_misspelling) | rv::filter(has_suggestions);
+
+  return std::set<Misspelling>(view.begin(), view.end());
 };
 
 /* Helper methods */
