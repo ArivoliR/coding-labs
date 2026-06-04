@@ -7,23 +7,23 @@
 #include <iostream>
 #include <string>
 
-class User
-{
+class User {
 public:
-  User(const std::string& name);
-  void add_friend(const std::string& name);
+  User(const std::string &name);
+  void add_friend(const std::string &name);
   std::string get_name() const;
   size_t size() const;
-  void set_friend(size_t index, const std::string& name);
+  void set_friend(size_t index, const std::string &name);
 
-  /** 
+  /**
    * STUDENT TODO:
    * Your custom operators and special member functions will go here!
    */
+  friend std::ostream &operator<<(std::ostream &os, const User &user);
 
 private:
   std::string _name;
-  std::string* _friends;
+  std::string *_friends;
   size_t _size;
   size_t _capacity;
 };
