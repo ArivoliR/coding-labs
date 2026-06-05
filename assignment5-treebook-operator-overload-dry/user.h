@@ -4,6 +4,7 @@
  * (originally by Fabio Ibanez, with modifications by Jacob Roberts-Baca).
  */
 
+#include "friend_list.h"
 #include <iostream>
 #include <string>
 
@@ -30,9 +31,5 @@ public:
 
 private:
   std::string _name;
-  std::string *_friends;
-  size_t _size;
-  size_t _capacity;
-
-  void copy_helper(const User &user);
+  FriendList _friends;
 };
