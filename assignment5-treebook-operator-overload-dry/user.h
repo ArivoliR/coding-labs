@@ -24,7 +24,7 @@ public:
   User(const User &user);                // copy ctor
   User &operator=(const User &user);     // copy assignment
   User(User &&user) = delete;            // move ctor
-  User &operator=(User &&user) = delete; // move assingment
+  User &operator=(User &&user) = delete; // move assignment
 
   friend std::ostream &operator<<(std::ostream &os, const User &user);
 
@@ -33,4 +33,6 @@ private:
   std::string *_friends;
   size_t _size;
   size_t _capacity;
+
+  void copy_helper(const User &user);
 };

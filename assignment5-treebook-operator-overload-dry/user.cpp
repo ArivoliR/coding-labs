@@ -27,6 +27,17 @@ void User::add_friend(const std::string &name) {
   _friends[_size++] = name;
 }
 
+void User::copy_helper(const User &user) {
+  _friends = nullptr;
+
+  if (_capacity) {
+    _friends = new std::string[_capacity];
+    for (auto i = 0; i < _size; i++) {
+      _friends[i] = user._friends[i];
+    }
+  }
+}
+
 /**
  * Returns the name of this User.
  */
@@ -57,13 +68,7 @@ User::~User() { delete[] _friends; }
 User::User(const User &user)
     : _name(user._name), _friends(nullptr), _size(user._size),
       _capacity(user._capacity) {
-  if (_capacity) {
-    _friends = new std::string[_capacity];
-
-    for (auto i = 0; i < _size; i++) {
-      _friends[i] = user._friends[i];
-    }
-  }
+  copy_helper(user);
 }
 
 User &User::operator=(const User &user) {
@@ -75,14 +80,7 @@ User &User::operator=(const User &user) {
   _name = user._name;
   _size = user._size;
   _capacity = user._capacity;
-  _friends = nullptr;
-
-  if (_capacity) {
-    _friends = new std::string[_capacity];
-    for (auto i = 0; i < _size; i++) {
-      _friends[i] = user._friends[i];
-    }
-  }
+  copy_helper(user);
   return *this;
 }
 
