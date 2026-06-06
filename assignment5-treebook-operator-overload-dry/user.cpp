@@ -44,6 +44,14 @@ User::User(const User &user) = default;
 
 User &User::operator=(const User &user) = default;
 
+User &User::operator+=(User &rhs) {
+  add_friend(rhs._name);
+  rhs.add_friend(_name);
+  return *this;
+}
+
+bool User::operator<(const User &rhs) const { return _name < rhs._name; }
+
 std::ostream &operator<<(std::ostream &os, const User &user) {
   return os << "User(name=" << user._name << ", friends=" << user._friends
             << ")";

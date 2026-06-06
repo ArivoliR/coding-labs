@@ -27,6 +27,9 @@ public:
   User(User &&user) = delete;            // move ctor
   User &operator=(User &&user) = delete; // move assignment
 
+  User &operator+=(User &rhs);
+  bool operator<(const User &rhs) const;
+
   friend std::ostream &operator<<(std::ostream &os, const User &user);
 
 private:
